@@ -91,8 +91,8 @@ void Game::initializeObjects_(const json& jsonData) {
 
 			// Add the object to the player or a room based on initial location
 			if (rooms_.find(initialLocationId) != rooms_.end()) {
-				Room* room = rooms_[initialLocationId];
-				room->addObject(newObject);
+				Room* initialRoom = rooms_[initialLocationId];
+				initialRoom->addObject(newObject);
 				continue;
 			}
 

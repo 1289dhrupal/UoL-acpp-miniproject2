@@ -17,6 +17,8 @@ public:
     Object(const string& name, const string& description = DEFAULT_DESCRIPTION,
         const string& location = DEFAULT_LOCATION, int durability = DEFAULT_DURABILITY);
 
+    ~Object();
+
     string getName() const;
 
     string getDescription() const;
@@ -25,8 +27,6 @@ public:
 
     string getLocation() const;
     void setLocation(const string& location);
-
-    int use(Enemy& enemy);
 
 private:
     string _name;

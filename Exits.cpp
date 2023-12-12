@@ -3,6 +3,8 @@
 
 using namespace std;
 
+Enemy::~Enemy() { /* No cleanup needed as rooms are not managed by Exits */ }
+
 Room* Exits::get(const string& direction) {
     if (direction == "east") return _east;
     if (direction == "west") return _west;

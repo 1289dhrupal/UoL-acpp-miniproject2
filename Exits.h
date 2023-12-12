@@ -14,6 +14,7 @@ private:
 
 public:
     Exits() : _east(nullptr), _west(nullptr), _north(nullptr), _south(nullptr) {}
+    ~Exits();
 
     Room* get(const std::string& direction);
     void set(const std::string& direction, Room* room);

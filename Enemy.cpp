@@ -3,6 +3,8 @@
 Enemy::Enemy(const string& name, const string& description, int aggressiveness, const string& location)
     : _name(name), _description(description), _aggressiveness(aggressiveness), _location(location) {}
 
+Enemy::~Enemy() { /* No cleanup needed */ }
+
 string Enemy::getName() const { return _name; }
 
 string Enemy::getDescription() const { return _description; }

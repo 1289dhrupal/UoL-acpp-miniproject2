@@ -10,6 +10,7 @@ using namespace std;
 class Enemy {
 public:
     Enemy(const string& name, const string& description, int aggressiveness, const string& location);
+    ~Enemy();
 
     string getName() const;
     string getDescription() const;

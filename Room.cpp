@@ -1,23 +1,34 @@
 #include "Room.h"
 #include <algorithm>
 
-Room::Room(const std::string& name, const std::string& description)
+Room::Room(const string& name, const string& description)
     : _name(name), _description(description) {}
 
-Room::Room(const std::string& name, const std::string& description, const Exits& exits,
-    const std::vector<Object>& objects, const std::vector<Enemy>& enemies)
-    : _name(name), _description(description), _exits(exits), _objects(objects), _enemies(enemies) {}
+Room::~Room() { /* Cleanup code, if any(currently not needed */ }
 
 Room* Room::getExit(const std::string& direction) {
-    return _exits.get(direction);
+    auto it = _exits.find(direction);
+    if (it != _exits.end()) {
+        return it->second;
+    }
+    return nullptr;
 }
 
-void Room::setExit(const std::string& direction, Room* room) {
-    _exits.set(direction, room);
+void Room::setExit(const string& direction, Room* room) {
+    _exits[direction] = room; // Use object name as key
 }
+
+Object* Room::getObject(const string& name) {
+    auto it = _objects.find(name);
+    if (it != _objects.end()) {
+        return &(it->second);
+    }
+    return nullptr;  // Return nullptr if no enemy with that name is found
+}
+
 
 void Room::addObject(const Object& object) {
-    _objects.push_back(object);
+    _objects[object.getName()] = object; // Use object name as key
 }
 
 bool Room::hasObjects() const {
@@ -25,10 +36,27 @@ bool Room::hasObjects() const {
 }
 
 void Room::removeObject(const Object& object) {
-    auto it = std::find(_objects.begin(), _objects.end(), object);
-    if (it != _objects.end()) {
-        _objects.erase(it);
+    _objects.erase(object.getName()); // Erase by key
+}
+
+Enemy* Room::getEnemy(const string& name) {
+    auto it = _enemies.find(name);
+    if (it != _enemies.end()) {
+        return &(it->second);
     }
+    return nullptr;  // Return nullptr if no enemy with that name is found
+}
+
+void Room::addEnemy(const Enemy& enemy) {
+    _enemies[enemy.getName()] = enemy; // Use enemy name as key
+}
+
+bool Room::hasEnemy() const {
+    return !_enemies.empty();
+}
+
+void Room::removeEnemy(const Enemy& enemy) {
+    _enemies.erase(enemy.getName()); // Erase by key
 }
 
 std::string Room::getDescription() const {
@@ -37,11 +65,10 @@ std::string Room::getDescription() const {
 
 void Room::look() {
     std::cout << _description << "\n";
-    // Describe items
-    for (const auto& object : _objects) {
-        std::cout << "You see a " << object.getName() << ".\n";
+    for (const auto& pair : _objects) { // pair is a std::pair<const std::string, Object>
+        std::cout << "You see a " << pair.first << ".\n"; // pair.first accesses the Object
     }
-    // Add logic to describe exits and enemies
+    // Add logic for exits and enemies
 }
 
 void Room::lookAround() {

@@ -19,26 +19,26 @@ public:
     void setExit(const string& direction, Room* room);
 
     Object* getObject(const string& object);
-    void addObject(const Object& object);
+    void addObject(Object* object);
     bool hasObjects() const;
-    void removeObject(const Object& object);
+    void removeObject(Object* object);
 
     Enemy* getEnemy(const string& enemy);
-    void addEnemy(const Enemy& enemy);
+    void addEnemy(Enemy* enemy);
     bool hasEnemy() const;
-    void removeEnemy(const Enemy& enemy);
+    void removeEnemy(Enemy* enemy);
 
     string getDescription() const;
 
-    void look();
-    void lookAround();
+    string look();
+    string lookAround();
 
 private:
     string _name;
     string _description;
     map<string, Room*> _exits;
-    map<string, Object> _objects;
-    map<string, Enemy> _enemies;
+    map<string, Object*> _objects;
+    map<string, Enemy*> _enemies;
 };
 
 #endif // ROOM_H

@@ -1,8 +1,12 @@
 #include "Enemy.h"
+#include "Objective.h"
+
+static const string DEFAULT_DESCRIPTION = "Random Enemy.";
+static const int DEFAULT_AGGRESSIVENESS = 50;
 
 // Constructor initializing Enemy with ID, description, aggressiveness, and location.
-Enemy::Enemy(const string& id, const string& description, int aggressiveness, const string& location)
-    : id_(id), description_(description), aggressiveness_(aggressiveness), location_(location) {}
+Enemy::Enemy(const string& id, const string& description, int aggressiveness)
+    : id_(id), description_(description), aggressiveness_(aggressiveness){}
 
 // Destructor for Enemy class.
 Enemy::~Enemy() { /* No cleanup needed */ }
@@ -18,9 +22,3 @@ int Enemy::getAggressiveness() const { return aggressiveness_; }
 
 // Sets the aggressiveness level of the enemy.
 void Enemy::setAggressiveness(int aggressiveness) { aggressiveness_ = aggressiveness; }
-
-// Returns the current location of the enemy.
-string Enemy::getLocation() const { return location_; }
-
-// Sets the current location of the enemy.
-void Enemy::setLocation(const string& location) { location_ = location; }

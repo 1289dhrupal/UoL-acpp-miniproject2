@@ -13,7 +13,7 @@ using namespace std;
 class Player {
     // Represents a player in the game with health, location, and objects.
 public:
-    
+
     // Constructor to initialize a player at a specific location.
     Player(const string& location);
 

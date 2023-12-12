@@ -21,6 +21,9 @@ public:
     // Destructor for the Objective class.
     ~Room();
 
+    // Returns the room ID.
+    string getId();
+
     // Returns a pointer to an exit room based on the given direction.
     Room* getExit(const string& direction);
     
@@ -67,8 +70,8 @@ public:
     string lookAround();
 
 private:
-    string id_;
-    string description_;
+    const string id_;
+    const string description_;
     map<string, Room*> exits_;
     map<string, Object*> objects_;
     map<string, Enemy*> enemies_;

@@ -38,8 +38,8 @@ public:
     void setLocation(const string& location);
 
 private:
-    string id_;
-    string description_;
+    const string id_;
+    const string description_;
     string location_;  // Currently used for initial location of the object or is it with player.
     int durability_;
 };

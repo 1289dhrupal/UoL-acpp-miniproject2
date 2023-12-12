@@ -9,6 +9,11 @@ Room::Room(const string& id, const string& description)
 // Destructor for Room class.
 Room::~Room() { /* No cleanup needed */ }
 
+string Room::getId()
+{
+    return id_;
+}
+
 // Gets an exit from the room based on the specified direction.
 Room* Room::getExit(const string& direction) {
     auto it = exits_.find(direction);
@@ -22,8 +27,8 @@ Room* Room::getExit(const string& direction) {
 void Room::setExit(const string& direction, Room* room) { exits_[direction] = room; }
 
 // Retrieves an object by ID from the room.
-Object* Room::getObject(const string& enemyId) {
-    auto it = objects_.find(enemyId);
+Object* Room::getObject(const string& objectId) {
+    auto it = objects_.find(objectId);
     if (it != objects_.end()) {
         return it->second;
     }

@@ -10,9 +10,12 @@ using namespace std;
 class Enemy {
     // Represents an enemy with unique attributes in the game.
 public:
-    
+    static const string DEFAULT_DESCRIPTION;
+    static const int DEFAULT_AGGRESSIVENESS;
+
     // Constructor to initialize an enemy with ID, description, aggressiveness, and location.
-    Enemy(const string& id, const string& description, int aggressiveness, const string& location);
+    Enemy(const string& id, const string& description = DEFAULT_DESCRIPTION, 
+        int aggressiveness = DEFAULT_AGGRESSIVENESS);
     
     // Destructor for the Enemy class.
     ~Enemy();
@@ -28,18 +31,11 @@ public:
     
     // Sets the aggressiveness level of the enemy.
     void setAggressiveness(int aggressiveness);
-    
-    // Returns the initial location of the enemy.
-    string getLocation() const;
-    
-    // Sets the initial location of the enemy.
-    void setLocation(const string& location);
 
 private:
-    string id_;
-    string description_;
+    const string id_;
+    const string description_;
     int aggressiveness_;
-    string location_; // Currently used for initial location of the enemy.
 };
 
 #endif // ENEMY_H

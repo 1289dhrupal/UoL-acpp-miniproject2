@@ -7,17 +7,16 @@ const string Object::DEFAULT_DESCRIPTION = "A Random Weapon.";
 const string Object::DEFAULT_LOCATION = "player";
 const int Object::DEFAULT_DURABILITY = 100;
 
-Object::Object(const string& name, const string& description, const string& location, int durability)
-    : _name(name), _description(description), _location(location), _durability(durability) {}
+Object::Object(const string& id, const string& description, const string& location, int durability)
+    : id_(id), description_(description), location_(location), durability_(durability) {}
 
 Object::~Object() { /* No cleanup needed */ }
 
-string Object::getName() const { return _name; }
+string Object::getId() const { return id_; }
 
-string Object::getDescription() const { return _description; }
+string Object::getDescription() const { return description_; }
 
-int Object::getDurability() const { return _durability; }
+int Object::getDurability() const { return durability_; }
 
-void Object::setLocation(const string& location) { _location = location; }
-
-string Object::getLocation() const { return _location; }
+void Object::setLocation(const string& location) { location_ = location; }
+string Object::getLocation() const { return location_; }

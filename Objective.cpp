@@ -1,3 +1,3 @@
 #include "Objective.h"
 
-Objective::Objective(const string& type, const string& roomName) : _type(type), _roomName(roomName) {}
+Objective::Objective(const string& type, const string& roomId) : type_(type), roomId_(roomId) {}

@@ -21,7 +21,7 @@ public:
     string getLocation() const;
     void setLocation(const string& location);
 
-    Object* getObject(const string& objectName);
+    Object* getObject(const string& objectId);
     map<string, Object*> getObjects() const;
     void addObject(Object* object);
     bool hasObjects() const;
@@ -29,9 +29,9 @@ public:
     string check() const;
 
 private:
-    int _health;
-    string _location;
-    map<string, Object*> _objects;
+    int health_;
+    string location_;
+    map<string, Object*> objects_;
 };
 
 #endif // PLAYER_H

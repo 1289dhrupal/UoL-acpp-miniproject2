@@ -14,12 +14,12 @@ public:
     static const string DEFAULT_LOCATION;
     static const int DEFAULT_DURABILITY;
 
-    Object(const string& name, const string& description = DEFAULT_DESCRIPTION,
+    Object(const string& id, const string& description = DEFAULT_DESCRIPTION,
         const string& location = DEFAULT_LOCATION, int durability = DEFAULT_DURABILITY);
 
     ~Object();
 
-    string getName() const;
+    string getId() const;
 
     string getDescription() const;
 
@@ -29,10 +29,10 @@ public:
     void setLocation(const string& location);
 
 private:
-    string _name;
-    string _description;
-    string _location;
-    int _durability;
+    string id_;
+    string description_;
+    string location_;
+    int durability_;
 };
 
 #endif // OBJECT_H

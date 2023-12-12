@@ -12,11 +12,11 @@ using namespace std;
 
 class Objective {
 public:
-    Objective(const string& type, const string& roomName);
+    Objective(const string& type, const string& roomId);
 
 private:
-    string _type;
-    string _roomName;
+    string type_;
+    string roomId_;
 };
 
 #endif // OBJECTIVE_H

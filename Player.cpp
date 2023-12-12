@@ -2,54 +2,44 @@
 #include <sstream> // Include for stringstream
 
 Player::Player(const string& currLocation)
-    : _health(100), _location(currLocation) {}
+    : health_(100), location_(currLocation) {}
 
 Player::~Player() {
     // Cleanup code (if any)
 }
 
-int Player::getHealth() const {
-    return _health;
-}
+int Player::getHealth() const { return health_; }
 
-void Player::setHealth(int health) {
-    _health = health;
-}
+void Player::setHealth(int health) { health_ = health; }
 
-void Player::setLocation(const string& location) { _location = location; }
+void Player::setLocation(const string& location) { location_ = location; }
 
-string Player::getLocation() const { return _location; }
+string Player::getLocation() const { return location_; }
 
-Object* Player::getObject(const string& enemyName) {
-    auto it = _objects.find(enemyName);
-    if (it != _objects.end()) {
+Object* Player::getObject(const string& enemyId) {
+    auto it = objects_.find(enemyId);
+    if (it != objects_.end()) {
         return it->second;
     }
-    return nullptr;  // Return nullptr if no enemy with that name is found
+    return nullptr;  // Return nullptr if no enemy with that id is found
 }
 
-map<string, Object*> Player::getObjects() const {
-    return _objects;
-}
+map<string, Object*> Player::getObjects() const { return objects_; }
 
-void Player::addObject(Object* object) {
-    _objects[object->getName()] = object;
-}
+void Player::addObject(Object* object) { objects_[object->getId()] = object; }
 
-bool Player::hasObjects() const {
-    return !_objects.empty();
-}
+bool Player::hasObjects() const { return !objects_.empty(); }
 
 string Player::check() const {
     std::stringstream ss;
-    ss << "Current Location: " << _location << endl;
-    ss << "Health: " << _health << endl;
+    ss << "Current Location: " << location_ << endl;
+    ss << "Health: " << health_ << endl;
     ss << "Objects: ";
-    if (_objects.empty()) {
+    if (objects_.empty()) {
         ss << "None" << endl;
     }
     else {
-        for (const auto& objectPair : _objects) {
+        for (const auto& objectPair : objects_) {
             Object* object = objectPair.second;
             ss << "  " << objectPair.first << "(" << object->getDurability() << ")" << endl;
         }

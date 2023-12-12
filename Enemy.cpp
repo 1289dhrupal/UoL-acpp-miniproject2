@@ -1,16 +1,16 @@
 #include "Enemy.h"
 
-Enemy::Enemy(const string& name, const string& description, int aggressiveness, const string& location)
-    : _name(name), _description(description), _aggressiveness(aggressiveness), _location(location) {}
+Enemy::Enemy(const string& id, const string& description, int aggressiveness, const string& location)
+    : id_(id), description_(description), aggressiveness_(aggressiveness), location_(location) {}
 
 Enemy::~Enemy() { /* No cleanup needed */ }
 
-string Enemy::getName() const { return _name; }
+string Enemy::getId() const { return id_; }
 
-string Enemy::getDescription() const { return _description; }
+string Enemy::getDescription() const { return description_; }
 
-int Enemy::getAggressiveness() const { return _aggressiveness; }
-void Enemy::setAggressiveness(int aggressiveness) { _aggressiveness = aggressiveness; }
+int Enemy::getAggressiveness() const { return aggressiveness_; }
+void Enemy::setAggressiveness(int aggressiveness) { aggressiveness_ = aggressiveness; }
 
-string Enemy::getLocation() const { return _location; }
-void Enemy::setLocation(const string& location) { _location = location; }
+string Enemy::getLocation() const { return location_; }
+void Enemy::setLocation(const string& location) { location_ = location; }

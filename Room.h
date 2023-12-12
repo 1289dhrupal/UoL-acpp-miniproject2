@@ -13,18 +13,18 @@ using namespace std;
 
 class Room {
 public:
-    Room(const string& name, const string& description);
+    Room(const string& id, const string& description);
 
     Room* getExit(const string& direction);
     void setExit(const string& direction, Room* room);
 
-    Object* getObject(const string& objectName);
+    Object* getObject(const string& objectId);
     void addObject(Object* object);
     bool hasObjects() const;
     void removeObject(Object* object);
     map<string, Object*> getObjects() const;
 
-    Enemy* getEnemy(const string& enemyName);
+    Enemy* getEnemy(const string& enemyId);
     void addEnemy(Enemy* enemy);
     bool hasEnemy() const;
     void removeEnemy(Enemy* enemy);
@@ -36,11 +36,11 @@ public:
     string lookAround();
 
 private:
-    string _name;
-    string _description;
-    map<string, Room*> _exits;
-    map<string, Object*> _objects;
-    map<string, Enemy*> _enemies;
+    string id_;
+    string description_;
+    map<string, Room*> exits_;
+    map<string, Object*> objects_;
+    map<string, Enemy*> enemies_;
 };
 
 #endif // ROOM_H

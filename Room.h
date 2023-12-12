@@ -18,15 +18,17 @@ public:
     Room* getExit(const string& direction);
     void setExit(const string& direction, Room* room);
 
-    Object* getObject(const string& object);
+    Object* getObject(const string& objectName);
     void addObject(Object* object);
     bool hasObjects() const;
     void removeObject(Object* object);
+    map<string, Object*> getObjects() const;
 
-    Enemy* getEnemy(const string& enemy);
+    Enemy* getEnemy(const string& enemyName);
     void addEnemy(Enemy* enemy);
     bool hasEnemy() const;
     void removeEnemy(Enemy* enemy);
+    map<string, Enemy*> getEnemies() const;
 
     string getDescription() const;
 

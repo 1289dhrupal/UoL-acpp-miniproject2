@@ -2,7 +2,6 @@
 #include <algorithm>
 #include <sstream>
 
-
 Room::Room(const string& name, const string& description)
     : _name(name), _description(description) {}
 
@@ -20,8 +19,8 @@ void Room::setExit(const string& direction, Room* room) {
     _exits[direction] = room; // Use object name as key
 }
 
-Object* Room::getObject(const string& enemy) {
-    auto it = _objects.find(enemy);
+Object* Room::getObject(const string& enemyName) {
+    auto it = _objects.find(enemyName);
     if (it != _objects.end()) {
         return it->second;
     }
@@ -44,8 +43,12 @@ void Room::removeObject(Object* object) {
     _objects.erase(object->getName()); // Erase by key
 }
 
-Enemy* Room::getEnemy(const string& enemy) {
-    auto it = _enemies.find(enemy);
+map<string, Object*> Room::getObjects() const {
+    return _objects;
+}
+
+Enemy* Room::getEnemy(const string& enemyName) {
+    auto it = _enemies.find(enemyName);
     if (it != _enemies.end()) {
         return it->second;
     }
@@ -65,6 +68,10 @@ bool Room::hasEnemy() const {
 
 void Room::removeEnemy(Enemy* enemy) {
     _enemies.erase(enemy->getName()); // Erase by key
+}
+
+map<string, Enemy*> Room::getEnemies() const {
+    return _enemies;
 }
 
 string Room::getDescription() const {

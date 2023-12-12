@@ -32,9 +32,9 @@ private:
 
     void initializePlayer_(const json& jsonData);
     void initializeObjective_(const json& jsonData);
-    void initializeEnemies_(const json& jsonData);
-    void initializeObjects_(const json& jsonData);
     void initializeRooms_(const json& jsonData);
+    void initializeObjects_(const json& jsonData);
+    void initializeEnemies_(const json& jsonData);
 
 };
 

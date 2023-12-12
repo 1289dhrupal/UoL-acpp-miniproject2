@@ -7,9 +7,8 @@ Game::Game(const json& jsonData)
 	initializePlayer_(jsonData);
 	initializeObjective_(jsonData);
 	initializeRooms_(jsonData);
-
-	initializeEnemies_(jsonData);
 	initializeObjects_(jsonData);
+	initializeEnemies_(jsonData);
 	// int agg = j["enemies"][0]["aggressiveness"].get<int>();
 }
 
@@ -48,22 +47,6 @@ void Game::initializeRooms_(const json& jsonData) {
 			}
 		}
 	}
-}
-
-void Game::initializeObjects_(const json& jsonData) {
-	const string object1Id = "object1";
-	const string object1Description = "object1 description";
-	const string object1Location = "room2";
-	const int object1Durability = 10;
-	Object* object1 = new Object(object1Id, object1Description, object1Location, object1Durability);
-	objects_[object1->getId()] = object1;
-
-	const string object2Id = "object1";
-	const string object2Description = "object2 description";
-	const string object2Location = "room3";
-	const int object2Durability = 10;
-	Object* object2 = new Object(object2Id, object2Description, object2Location, object2Durability);
-	objects_[object2->getId()] = object2;
 }
 
 void Game::initializeObjects_(const json& jsonData) {

@@ -23,8 +23,6 @@ class Game {
 public:
     Game(const json& jsonData);
 
-    void go(string& direction);
-
 private:
     Player* player_ = nullptr;
     Objective* objective_ = nullptr;

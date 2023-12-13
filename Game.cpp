@@ -1,26 +1,91 @@
 #include "Game.h"
 #include "Player.h"
+#include <sstream>
+
+using namespace std;
 
 Game::Game(const json& jsonData)
 {
-
-	initializePlayer_(jsonData);
 	initializeObjective_(jsonData);
 	initializeRooms_(jsonData);
+	initializePlayer_(jsonData);
 	initializeObjects_(jsonData);
 	initializeEnemies_(jsonData);
-	// int agg = j["enemies"][0]["aggressiveness"].get<int>();
 }
 
-void Game::initializePlayer_(const json& jsonData) {
-	string playerLocation = "room1";
-	player_ = new Player(playerLocation);
+bool Game::isGameOver() const {
+	return isGameOver_;
+}
+
+string Game::displayActions() const {
+	std::stringstream ss;
+
+	ss << "Available Actions:\n";
+	ss << "1. Status - Check the current status of the game.\n";
+	ss << "   Usage: Type 'status' to get a summary of the current gameplay.\n";
+	ss << "2. Look - Check your surroundings or inspect specific items or enemies.\n";
+	ss << "   Usage: Type 'look room' to look at the current room.\n";
+	ss << "          Type 'look around' to see nearby areas.\n";
+	ss << "          Type 'look player' to check the player's status.\n";
+	ss << "          Type 'look object [object ID]' for details about an object.\n";
+	ss << "          Type 'look enemy [enemy ID]' for details about an enemy.\n";
+	ss << "3. Pick - Pick up an object in the current room.\n";
+	ss << "   Usage: Type 'pick [object ID]' to pick up an object.\n";
+	ss << "4. Drop - Drop an object from your inventory.\n";
+	ss << "   Usage: Type 'drop [object ID]' to drop an object.\n";
+	ss << "5. Goto - Move to a different room, if possible.\n";
+	ss << "   Usage: Type 'goto [room ID]' to move to a different room.\n";
+	ss << "6. Attack - Attack an enemy using an object from your inventory.\n";
+	ss << "   Usage: Type 'attack [enemy ID] [object ID]' to attack an enemy.\n";
+	ss << "7. Exit - Exit the game.\n";
+	ss << "   Usage: Type 'exit' to leave the game.\n";
+	ss << "Note: All the commands are case sensitive.\n";
+	return ss.str();
+}
+
+string Game::performCommand(const string& action, const string& value1, const string& value2) {
+
+	if (action == "exit") {
+		isGameOver_ = true;
+		return "You quit the game!\n";
+	}
+
+	if (action == "status") {
+		return actionStatus_();
+	}
+
+	if (!value1.empty() && action == "look") {
+		return actionLook_(value1, value2);
+	}
+
+	if (!value1.empty() && action == "pick") {
+		return actionPick_(value1);
+	}
+
+	if (!value1.empty() && action == "drop") {
+		return actionDrop_(value1);
+	}
+
+	if (!value1.empty() && action == "goto") {
+		return actionGoto_(value1);
+	}
+
+	if (!value1.empty() && !value2.empty() && action == "attack") {
+		return actionAttack_(value1, value2);
+	}
+
+	return "Invalid Command for " + action + "\n";
 }
 
 void Game::initializeObjective_(const json& jsonData) {
-	string objectiveType = "room";
-	string objectiveRoomId = "room3";
+	string objectiveType = jsonData["objective"]["type"].get<string>();;
+	string objectiveRoomId = jsonData["objective"]["what"]["room"].get<string>();;
 	objective_ = new Objective(objectiveType, objectiveRoomId);
+}
+
+void Game::initializePlayer_(const json& jsonData) {
+	string initialRoom = jsonData["player"]["initialroom"].get<string>();
+	player_ = new Player(initialRoom);
 }
 
 void Game::initializeRooms_(const json& jsonData) {
@@ -119,4 +184,231 @@ void Game::initializeEnemies_(const json& jsonData) {
 			room->addEnemy(newEnemy);
 		}
 	}
+}
+
+string Game::actionLook_(const string& value1, const string& value2)
+{
+	string currentRoomId = player_->getLocation();
+	Room* currentRoom = rooms_[currentRoomId];
+
+	if (value1 == "room") {
+		return currentRoom->look();
+	}
+
+	if (value1 == "around") {
+		return currentRoom->lookAround();
+	}
+
+	if (value1 == "player") {
+		return player_->check();
+	}
+
+	if (value1 == "objective") {
+		return objective_->check();
+	}
+
+	if (!value2.empty()) {
+		return "Invalid Command for looking " + value1 + "\n";
+	}
+
+	if (value1 == "enemy") {
+		map<string, Enemy*> currentEnemies = currentRoom->getEnemies();
+		if (currentEnemies.find(value2) == currentEnemies.end()) {
+			return "Invalid enemyId\n";
+		}
+
+		Enemy* currentEnemy = currentEnemies[value2];
+		return currentEnemy->look();
+	}
+
+	if (value1 == "object") {
+		map<string, Object*> currentObjects = currentRoom->getObjects();
+		if (currentObjects.find(value2) != currentObjects.end()) {
+			Object* currentObject = currentObjects[value2];
+			return currentObject->look();
+		}
+
+		map<string, Object*> currentPickedObjects = player_->getObjects();
+		if (currentPickedObjects.find(value1) != currentPickedObjects.end()) {
+			Object* currentPickedObject = currentPickedObjects[value1];
+			return currentPickedObject->look();
+		}
+
+		return "Invalid objectId\n";
+	}
+	if (value1 == "enemy") {
+		map<string, Enemy*> currentEnemies = currentRoom->getEnemies();
+		if (currentEnemies.find(value2) == currentEnemies.end()) {
+			return "Invalid enemyId\n";
+		}
+
+		Enemy* currentEnemy = currentEnemies[value2];
+		return currentEnemy->look();
+	}
+
+	if (value1 == "object") {
+		map<string, Object*> currentObjects = currentRoom->getObjects();
+		if (currentObjects.find(value2) != currentObjects.end()) {
+			Object* currentObject = currentObjects[value2];
+			return currentObject->look();
+		}
+
+		map<string, Object*> currentPickedObjects = player_->getObjects();
+		if (currentPickedObjects.find(value1) != currentPickedObjects.end()) {
+			Object* currentPickedObject = currentPickedObjects[value1];
+			return currentPickedObject->look();
+		}
+
+		return "Invalid objectId\n";
+	}
+
+	return "Invalid commmand for look\n";
+}
+
+string Game::actionPick_(const string& objectId)
+{
+	string currentRoomId = player_->getLocation();
+	Room* currentRoom = rooms_[currentRoomId];
+
+	map<string, Object*> currentObjects = currentRoom->getObjects();
+	if (currentObjects.find(objectId) == currentObjects.end()) {
+		return "Invalid ObjectId\n";
+	}
+
+	Object* currentObject = currentObjects[objectId];
+	currentRoom->removeObject(currentObject);
+	player_->addObject(currentObject);
+	return "Picked up object.\n";
+}
+
+string Game::actionDrop_(const string& objectId)
+{
+	string currentRoomId = player_->getLocation();
+	Room* currentRoom = rooms_[currentRoomId];
+
+	map<string, Object*> currentObjects = player_->getObjects();
+	if (currentObjects.find(objectId) == currentObjects.end()) {
+		return "Invalid ObjectId\n";
+	}
+
+	Object* currentObject = currentObjects[objectId];
+	player_->removeObject(currentObject);
+	currentRoom->addObject(currentObject);
+	return "Dropped object.\n";
+}
+
+string Game::actionGoto_(const string& roomId)
+{
+	if (rooms_.find(roomId) == rooms_.end()) {
+		return "Invalid roomId\n";
+	}
+
+	string currentRoomId = player_->getLocation();
+	Room* currentRoom = rooms_[currentRoomId];
+
+	Room* exitRoom = currentRoom->getExit(roomId);
+	if (exitRoom == nullptr) {
+		return "Current room does not have exit to " + roomId + "\n";
+	}
+
+	std::stringstream ss;
+
+	if (currentRoom->hasEnemy()) {
+		int totalAggressiveness = 0;
+		for (const auto& enemyPair : currentRoom->getEnemies()) {
+			Enemy* enemy = enemyPair.second;
+			int enemyAgressiveness = enemy->getAggressiveness();
+			totalAggressiveness += enemy->getAggressiveness();
+			ss << "Health reduced by " << enemyAgressiveness << " as this room had enemy " << enemyPair.first << endl;
+		}
+
+		int currentHealth = player_->getHealth();
+		currentHealth -= totalAggressiveness; // Reduce player's health
+		if (currentHealth <= 0) {
+			isGameOver_ = true;
+			ss << "Player is dead." << endl;
+			return ss.str();
+		}
+
+		player_->setHealth(currentHealth);
+		ss << "Health reduced as this room had enemies :: current health (" << currentHealth << ")" << endl;
+	}
+
+	Room* gotoRoom = rooms_[roomId];
+	player_->setLocation(roomId);
+	ss << "Moved to Room " + roomId << endl;
+
+	if (roomId == objective_->getBossRoomId()) {
+		ss << "You have reached the targeted room. Please kill the remaining enemies to win the game." << endl;;
+	}
+
+	return ss.str();
+}
+
+string Game::actionAttack_(const string& enemyId, const string& objectId)
+{
+	string currentRoomId = player_->getLocation();
+	Room* currentRoom = rooms_[currentRoomId];
+
+	map<string, Enemy*> currentEnemies = currentRoom->getEnemies();
+	if (currentEnemies.find(enemyId) == currentEnemies.end()) {
+		return "No enemy with ID " + enemyId + " in the current room.\n";
+	}
+
+	map<string, Object*> currentPickedObjects = player_->getObjects();
+	if (currentPickedObjects.find(objectId) == currentPickedObjects.end()) {
+		return "No object with ID " + objectId + " in player's possession.\n";
+	}
+
+	Enemy* currentEnemy = currentEnemies[enemyId];
+	Object* currentPickedObject = currentPickedObjects[objectId];
+
+	int enemyAggressiveness = currentEnemy->getAggressiveness();
+	int objectDurability = currentPickedObject->getDurability();
+
+	// Attack logic
+	int updatedAgressiveness = std::max(0, enemyAggressiveness - objectDurability);
+	int updatedDurability = std::max(0, objectDurability - enemyAggressiveness);
+
+	currentEnemy->setAggressiveness(updatedAgressiveness);
+	currentPickedObject->setDurability(updatedDurability);
+
+	std::stringstream ss;
+
+	if (currentEnemy->getAggressiveness() <= 0) {
+		currentRoom->removeEnemy(currentEnemy);
+		delete currentEnemy;  // Assuming dynamic allocation of enemies
+		ss << "Enemy " << enemyId << " has been defeated!" << endl;
+		if (objective_->getBossRoomId() == currentRoomId) {
+			isGameOver_ = true;
+		}
+	}
+	else {
+		ss << "Enemy has been attacked and aggressiveness is reduced to " << updatedAgressiveness << endl;
+	}
+
+	if (currentPickedObject->getDurability() <= 0) {
+		player_->removeObject(currentPickedObject);
+		delete currentPickedObject;  // Assuming dynamic allocation of objects
+		ss << "Object " << objectId << " has been destroyed!" << endl;
+	}
+	else {
+		ss << "Enemy has been used and durability is reduced to " << updatedDurability << endl;
+	}
+
+	return ss.str();
+}
+
+string Game::actionStatus_() {
+	std::stringstream ss;
+	string playerInfo = actionLook_("player");
+	string objectiveInfo = actionLook_("objective");
+	string roomInfo = actionLook_("room");
+
+	ss << "----------------------------- Current Status -----------------------------" << endl;
+	ss << playerInfo << endl;
+	ss << objectiveInfo << endl;
+	ss << roomInfo << endl;
+	ss << "--------------------------------------------------------------------------" << endl;
+	return ss.str();
 }

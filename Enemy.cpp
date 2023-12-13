@@ -1,8 +1,11 @@
 #include "Enemy.h"
 #include "Objective.h"
+#include <sstream>
 
-static const string DEFAULT_DESCRIPTION = "Random Enemy.";
-static const int DEFAULT_AGGRESSIVENESS = 50;
+using namespace std;
+
+const string Enemy::DEFAULT_DESCRIPTION = "Random Enemy.";
+const int Enemy::DEFAULT_AGGRESSIVENESS = 50;
 
 // Constructor initializing Enemy with ID, description, aggressiveness, and location.
 Enemy::Enemy(const string& id, const string& description, int aggressiveness)
@@ -22,3 +25,15 @@ int Enemy::getAggressiveness() const { return aggressiveness_; }
 
 // Sets the aggressiveness level of the enemy.
 void Enemy::setAggressiveness(int aggressiveness) { aggressiveness_ = aggressiveness; }
+
+// Provides a detailed description of the object.
+string Enemy::look() const {
+    stringstream ss;
+
+    ss << "----------------------------------------------" << endl;
+    ss << "Enemy :: " << id_ << " : " << description_ << endl;
+    ss << "    Current status :: Aggressiveness_ (" << aggressiveness_ << ")" << endl;
+    ss << "----------------------------------------------" << endl;
+
+    return ss.str();
+}

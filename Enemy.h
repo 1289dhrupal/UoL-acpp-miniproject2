@@ -32,6 +32,9 @@ public:
     // Sets the aggressiveness level of the enemy.
     void setAggressiveness(int aggressiveness);
 
+    // Provides a detailed description of the enemy.
+    string look() const;
+
 private:
     const string id_;
     const string description_;

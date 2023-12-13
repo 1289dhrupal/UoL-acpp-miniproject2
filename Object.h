@@ -31,11 +31,17 @@ public:
     // Returns the durability of the object.
     int getDurability() const;
 
+    // Sets the current durability of the object.
+    void setDurability(int durability);
+
     // Returns the current location of the object.
     string getLocation() const;
     
     // Sets the current location of the object.
     void setLocation(const string& location);
+
+    // Provides a detailed description of the object.
+    string look() const;
 
 private:
     const string id_;

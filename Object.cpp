@@ -1,5 +1,6 @@
 #include <string>
 #include "Object.h"
+#include <sstream>
 
 using namespace std;
 
@@ -23,8 +24,24 @@ string Object::getDescription() const { return description_; }
 // Returns the durability of the object.
 int Object::getDurability() const { return durability_; }
 
+// Sets the durability of the object.
+void Object::setDurability(int durability) { durability_ = durability; }
+
 // Sets the location of the object.
 void Object::setLocation(const string& location) { location_ = location; }
 
 // Gets the current location of the object.
 string Object::getLocation() const { return location_; }
+
+// Provides a detailed description of the object.
+string Object::look() const {
+    stringstream ss;
+
+    ss << "----------------------------------------------" << endl;
+    ss << "Object :: " << id_ << " : " << description_ << endl;
+    ss << "    Current status :: Durability(" << durability_ << ")" << endl;
+    ss << "                      Location(" << location_ << endl;
+    ss << "----------------------------------------------" << endl;
+
+    return ss.str();
+}

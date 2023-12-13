@@ -1,59 +1,37 @@
-// The following are some examples of how the https://github.com/nlohmann/json
-// JSON parser can be used.
-//
-// In this example we read from the sample map1.json file.
-// Put the json.hpp file in the same folder as everything else.
-
 #include <iostream>
 #include <fstream>
-#include <vector>
-#include "json.hpp"
-using namespace std;
-using json = nlohmann::json;
+#include <sstream>
+#include <string>
+#include "json.hpp" // Include the JSON library header
+#include "Game.h"  // Include the Game class header
 
 int main() {
 
-	ifstream fin("map1.json");
-	json j; // object that represents the json data
-	fin >> j; // read from file into j
+    ifstream file("map.json");
+    if (!file.is_open()) {
+        cout << "Failed to open map.json" << endl;
+        return 1;
+    }
 
-	// JSON is essentially a set of key:value pairs, although
-	// the "value" themselves can be a single value, or an array of
-	// other values, or some other set of key:value pairs.
-	// This gives a rich nested structure.
+    json jsonData;
+    file >> jsonData;
+    file.close();
 
-	// This outputs how many things there are at the top level
-	// and the keys (5: rooms, objects, enemies, player, objective)
-	int numTypes = j.size();
-	cout << numTypes << endl;
+    Game game(jsonData);
 
-	for (auto e : j.items()) {
-		string s = e.key();
-		cout << s << endl;
-	}
+    string input;
+    while (!game.isGameOver()) {
+        cout << "Enter command: ";
+        getline(cin, input);
 
-	// This outputs the number of rooms and something about the 2nd room
-	int numRooms = j["rooms"].size();
-	cout << numRooms << endl;
-	string room1desc = j["rooms"][1]["desc"].get<string>();
-	cout << room1desc << endl;
+        stringstream ss(input);
+        string action, value1, value2;
+        ss >> action >> value1 >> value2;
 
-	// This retrieves the aggressiveness of the first enemy,
-	// and the list of objects that kills it as a vector
-	int agg = j["enemies"][0]["aggressiveness"].get<int>();
-	cout << agg << endl;
-	vector<string> v = j["enemies"][0]["killedby"].get<vector<string>>();
-	for (string s : v) cout << s << endl;
+        string result = game.performCommand(action, value1, value2);
+        cout << result << endl;
+    }
 
-
-	// if you want to handle fields that may or may not exist in the json
-	// file, here is one way to do it:
-	string s;
-	try {
-		s = j["enemies"][0]["intro_msg"].get<string>();
-	}
-	catch (const json::exception& e) {
-		s = "some default message";
-	}
-	cout << s << endl;
+    cout << "Game Over. Thank you for playing!" << endl;
+    return 0;
 }

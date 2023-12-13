@@ -23,19 +23,41 @@ class Game {
 public:
     Game(const json& jsonData);
 
+    string displayActions() const;
+
+    string performCommand(const string& action, const string& value1 = "", const string& = "");
+
+    bool isGameOver() const;
 private:
+
     Player* player_ = nullptr;
     Objective* objective_ = nullptr;
     map<string, Enemy*> enemies_;
     map<string, Room*> rooms_;
     map<string, Object*> objects_;
+    bool isGameOver_ = false;
 
     void initializePlayer_(const json& jsonData);
+
     void initializeObjective_(const json& jsonData);
+
     void initializeRooms_(const json& jsonData);
+
     void initializeObjects_(const json& jsonData);
+
     void initializeEnemies_(const json& jsonData);
 
+    string actionLook_(const string& value1, const string& value2 = "");
+
+    string actionPick_(const string& objectId);
+
+    string actionDrop_(const string& objectId);
+
+    string actionGoto_(const string& roomId);
+
+    string actionAttack_(const string& enemyId, const string& objectId);
+
+    string actionStatus_();
 };
 
 #endif // GAME_H

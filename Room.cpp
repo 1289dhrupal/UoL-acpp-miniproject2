@@ -2,6 +2,8 @@
 #include <algorithm>
 #include <sstream>
 
+using namespace std;
+
 // Constructor initializing Room with ID and description.
 Room::Room(const string& id, const string& description)
     : id_(id), description_(description) {}
@@ -87,31 +89,38 @@ string Room::getDescription() const {
 string Room::look() {
     stringstream ss;
 
-    ss << description_ << "\n";
+    ss << "----------------------------------------------" << endl;
+    ss << "Room :: " << id_ << " : " << description_ << endl;
 
     // Describe objects
     if (!objects_.empty()) {
         ss << "Objects in the room:\n";
-        for (const auto& object : objects_) {
-            ss << "You see a " << object.first << "." << endl;
-        }
-    }
-
-    // Describe exits
-    if (!exits_.empty()) {
-        ss << "Exits from the room:\n";
-        for (const auto& exit : exits_) {
-            ss << "There is an exit to the " << exit.first << "." << endl;
+        for (const auto& objectPair : objects_) {
+            Object* object = objectPair.second;
+            ss << object->look() << endl;
         }
     }
 
     // Describe enemies
     if (!enemies_.empty()) {
         ss << "Enemies in the room:\n";
-        for (const auto& enemy : enemies_) {
-            ss << "There is a " << enemy.first << " here." << endl;
+        for (const auto& enemyPair : enemies_) {
+            Enemy* enemy = enemyPair.second;
+            ss << enemy->look() << endl;
         }
     }
+
+    // Describe exits
+    if (!exits_.empty()) {
+        ss << "Exits from the room:\n";
+        for (const auto& exitPair : exits_) {
+            ss << "----------------------------------------------" << endl;
+            Room* exit = exitPair.second;
+            ss << "Exit :: " << exitPair.first << " : " << exitPair.second->getId() << endl;
+            ss << "----------------------------------------------" << endl;
+        }
+    }
+    ss << "----------------------------------------------" << endl;
 
     return ss.str();
 }
@@ -122,8 +131,12 @@ string Room::lookAround() {
     for (const auto& exitPair : exits_) {
         Room* connectedRoom = exitPair.second;
         if (connectedRoom) {
+            ss << "----------------------------------------------" << endl;
+            ss << "----------------------------------------------" << endl;
             ss << "Looking towards the " << exitPair.first << ", you see: ";
             ss << connectedRoom->look() << endl << endl;
+            ss << "----------------------------------------------" << endl;
+            ss << "----------------------------------------------" << endl;
         }
     }
     return ss.str();

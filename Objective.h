@@ -25,6 +25,8 @@ public:
 
     bool isObjectiveAchived(Room* room);
 
+    string check();
+
 private:
     const string type_;
     const string roomId_;

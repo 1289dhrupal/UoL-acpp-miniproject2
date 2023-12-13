@@ -1,6 +1,8 @@
 #include "Player.h"
 #include <sstream>
 
+using namespace std;
+
 // Constructor initializing player with a location.
 Player::Player(const string& currLocation)
     : health_(100), location_(currLocation) {}
@@ -35,23 +37,28 @@ map<string, Object*> Player::getObjects() const { return objects_; }
 // Adds an object to player's inventory.
 void Player::addObject(Object* object) { objects_[object->getId()] = object; }
 
+// Removes an object from the room.
+void Player::removeObject(Object* object) { objects_.erase(object->getId()); }
+
 // Checks if the player has any objects in inventory.
 bool Player::hasObjects() const { return !objects_.empty(); }
 
 // Provides a status summary of the player.
 string Player::check() const {
     std::stringstream ss;
-    ss << "Current Location: " << location_ << endl;
-    ss << "Health: " << health_ << endl;
-    ss << "Objects: ";
-    if (objects_.empty()) {
-        ss << "None" << endl;
+
+    ss << "----------------------------------------------" << endl;
+    ss << "Player :: Health (" << health_ << ")" << endl;
+    ss << "          Current Location (" << location_ << ")" << endl;
+    ss << "          Objects (" << endl;
+    ss << "          )" << endl;
+
+    for (const auto& objectPair : objects_) {
+        Object* object = objectPair.second;
+        ss << "              " << objectPair.first << "(" << object->getDurability() << ")" << endl;
     }
-    else {
-        for (const auto& objectPair : objects_) {
-            Object* object = objectPair.second;
-            ss << "  " << objectPair.first << "(" << object->getDurability() << ")" << endl;
-        }
-    }
+
+    ss << "----------------------------------------------" << endl;
+
     return ss.str();
 }

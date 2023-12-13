@@ -41,6 +41,9 @@ public:
     // Adds an object to the player's inventory.
     void addObject(Object* object);
     
+    // Removes an object from the room.
+    void removeObject(Object* object);
+
     // Checks if the player has any objects in their inventory.
     bool hasObjects() const;
 

@@ -11,23 +11,29 @@ using namespace std;
 #ifndef OBJECTIVE_H
 #define OBJECTIVE_H
 
+// The Objective class represents a specific objective or goal in the game.
+// Currently, the game has only one type of objective.
 class Objective {
-    // Represents a specific objective or goal in the game.
-    // Currently the game has only one objective.
 public:
+    // Constructor: Initializes an objective with a type and associated room ID.
+    // type: The type of the objective (room, enemy, collect, survival).
+    // targetId: The ID of the targetId associated with the objective.
+    Objective(const string& type, const string& targetId);
 
-    // Constructor to initialize an objective with a type and associated room ID.
-    Objective(const string& type, const string& roomId);
-
-    // Destructor for the Objective class.
+    // Destructor: Cleans up the Objective's resources (if any).
     ~Objective();
 
+    // getTargetId: Retrieves the ID of the target associated with the objective.
     string getTargetId();
 
+    // check: Returns a status summary or description of the objective.
     string check();
 
 private:
+    // Type of the objective.
     const string type_;
+
+    // ID of the target room or item associated with the objective.
     const string targetId_;
 };
 

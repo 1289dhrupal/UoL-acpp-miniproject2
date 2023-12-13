@@ -4,98 +4,114 @@
 
 using namespace std;
 
-// Constructor initializing Room with ID and description.
+// Constructor: Initializes a Room with a specific ID and description.
 Room::Room(const string& id, const string& description)
     : id_(id), description_(description) {}
 
-// Destructor for Room class.
-Room::~Room() { /* No cleanup needed */ }
+// Destructor: Cleans up the Room's resources.
+Room::~Room() {
+    for (auto& objectPair : objects_) {
+        delete objectPair.second;
+    }
+    objects_.clear();
 
-string Room::getId()
-{
+    for (auto& enemyPair : enemies_) {
+        delete enemyPair.second;
+    }
+    enemies_.clear();
+}
+
+// getId: Returns the room ID.
+string Room::getId() {
     return id_;
 }
 
-// Gets an exit from the room based on the specified direction.
+// getExit: Retrieves an exit from the room based on the specified direction.
 Room* Room::getExit(const string& direction) {
     auto it = exits_.find(direction);
-    if (it != exits_.end()) {
-        return it->second;
-    }
-    return nullptr;
+    return it != exits_.end() ? it->second : nullptr;
 }
 
-// Sets an exit for the room in a specified direction.
-void Room::setExit(const string& direction, Room* room) { exits_[direction] = room; }
+// setExit: Sets an exit for the room in a specified direction.
+void Room::setExit(const string& direction, Room* room) {
+    exits_[direction] = room;
+}
 
-// Checks if the room has any exits.
-bool Room::hasExits() { return !exits_.empty(); }
+// hasExits: Checks if the room has any exits.
+bool Room::hasExits() {
+    return !exits_.empty();
+}
 
-// Retrieves an object by ID from the room.
+// getObject: Retrieves an object by ID from the room.
 Object* Room::getObject(const string& objectId) {
     auto it = objects_.find(objectId);
-    if (it != objects_.end()) {
-        return it->second;
-    }
-    return nullptr;
+    return it != objects_.end() ? it->second : nullptr;
 }
 
-// Adds an object to the room.
+// addObject: Adds an object to the room.
 void Room::addObject(Object* object) {
     if (object) {
         objects_[object->getId()] = object;
     }
-    // TODO: throw error
+    // TODO: Add error handling if necessary
 }
 
-// Checks if the room has any objects.
-bool Room::hasObjects() const { return !objects_.empty(); }
+// hasObjects: Checks if the room has any objects.
+bool Room::hasObjects() const {
+    return !objects_.empty();
+}
 
-// Removes an object from the room.
-void Room::removeObject(Object* object) { objects_.erase(object->getId()); }
+// removeObject: Removes an object from the room.
+void Room::removeObject(Object* object) {
+    objects_.erase(object->getId());
+}
 
-// Returns a map of all objects in the room.
-map<string, Object*> Room::getObjects() const { return objects_; }
+// getObjects: Returns a map of all objects in the room.
+map<string, Object*> Room::getObjects() const {
+    return objects_;
+}
 
-// Retrieves an enemy by ID from the room.
+// getEnemy: Retrieves an enemy by ID from the room.
 Enemy* Room::getEnemy(const string& enemyId) {
     auto it = enemies_.find(enemyId);
-    if (it != enemies_.end()) {
-        return it->second;
-    }
-    return nullptr;  // Return nullptr if no enemy with that id is found
+    return it != enemies_.end() ? it->second : nullptr;
 }
 
-// Adds an enemy to the room.
+// addEnemy: Adds an enemy to the room.
 void Room::addEnemy(Enemy* enemy) {
     if (enemy) {
-        enemies_[enemy->getId()] = enemy; // Use enemy id as key
+        enemies_[enemy->getId()] = enemy;
     }
-    // TODO: throw error
+    // TODO: Add error handling if necessary
 }
 
-// Checks if the room has any enemies.
-bool Room::hasEnemy() const { return !enemies_.empty(); }
+// hasEnemy: Checks if the room has any enemies.
+bool Room::hasEnemy() const {
+    return !enemies_.empty();
+}
 
-// Removes an enemy from the room.
-void Room::removeEnemy(Enemy* enemy) { enemies_.erase(enemy->getId()); }
+// removeEnemy: Removes an enemy from the room.
+void Room::removeEnemy(Enemy* enemy) {
+    enemies_.erase(enemy->getId());
+}
 
-// Returns a map of all enemies in the room.
-map<string, Enemy*> Room::getEnemies() const { return enemies_; }
+// getEnemies: Returns a map of all enemies in the room.
+map<string, Enemy*> Room::getEnemies() const {
+    return enemies_;
+}
 
+// getDescription: Returns the description of the room.
 string Room::getDescription() const {
     return description_;
 }
 
-
-// Provides a detailed description of the room and its contents.
+// look: Provides a detailed description of the room and its contents.
 string Room::look() {
     stringstream ss;
-
     ss << "----------------------------------------------" << endl;
     ss << "Room :: " << id_ << " : " << description_ << endl;
 
-    // Describe objects
+    // Describing objects in the room
     if (!objects_.empty()) {
         ss << "    Objects in the room:\n";
         for (const auto& objectPair : objects_) {
@@ -104,7 +120,7 @@ string Room::look() {
         }
     }
 
-    // Describe enemies
+    // Describing enemies in the room
     if (!enemies_.empty()) {
         ss << "    Enemies in the room:\n";
         for (const auto& enemyPair : enemies_) {
@@ -113,7 +129,7 @@ string Room::look() {
         }
     }
 
-    // Describe exits
+    // Describing exits from the room
     if (!exits_.empty()) {
         ss << "    Exits from the room:\n";
         for (const auto& exitPair : exits_) {
@@ -126,13 +142,14 @@ string Room::look() {
     return ss.str();
 }
 
-// Provides an overview of the room's surroundings.
+// lookAround: Provides an overview of the room's surroundings.
 string Room::lookAround() {
     stringstream ss;
     for (const auto& exitPair : exits_) {
         Room* connectedRoom = exitPair.second;
         if (connectedRoom) {
             ss << "\n\nLooking towards the " << exitPair.first << ", you see: \n";
+            ss << "    Direction : " << exitPair.first << endl;
             ss << connectedRoom->look() << endl << endl;
         }
     }

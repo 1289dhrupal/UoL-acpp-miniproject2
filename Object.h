@@ -8,46 +8,54 @@ using namespace std;
 #ifndef OBJECT_H
 #define OBJECT_H
 
+// The Object class represents an object within the game environment.
 class Object {
-    // Represents an object within the game environment.
 public:
+    // Static constants for default object attributes
     static const string DEFAULT_DESCRIPTION;
     static const string DEFAULT_LOCATION;
     static const int DEFAULT_DURABILITY;
 
-    // Constructor to initialize an object with ID, description, location, and durability.
+    // Constructor: Initializes an object with an ID, description, location, and durability.
+    // id: Unique identifier for the object.
+    // description: Description of the object, defaulted to DEFAULT_DESCRIPTION.
+    // location: Initial location of the object, defaulted to DEFAULT_LOCATION.
+    // durability: Durability of the object, defaulted to DEFAULT_DURABILITY.
     Object(const string& id, const string& description = DEFAULT_DESCRIPTION,
-        const string& location = DEFAULT_LOCATION, int durability = DEFAULT_DURABILITY);
+           const string& location = DEFAULT_LOCATION, int durability = DEFAULT_DURABILITY);
 
-    // Destructor for the Object class.
+    // Destructor: Cleans up the Object's resources.
     ~Object();
 
-    // Returns the unique ID of the object.
+    // getId: Returns the unique ID of the object.
     string getId() const;
 
-    // Returns the description of the object.
+    // getDescription: Returns the description of the object.
     string getDescription() const;
 
-    // Returns the durability of the object.
+    // getDurability: Returns the durability of the object.
     int getDurability() const;
 
-    // Sets the current durability of the object.
+    // setDurability: Sets the current durability of the object.
+    // durability: The new durability value.
     void setDurability(int durability);
 
-    // Returns the current location of the object.
+    // getLocation: Returns the current location of the object.
     string getLocation() const;
     
-    // Sets the current location of the object.
+    // setLocation: Sets the current location of the object.
+    // location: The new location for the object.
     void setLocation(const string& location);
 
-    // Provides a detailed description of the object.
+    // look: Provides a detailed description of the object.
     string look() const;
 
 private:
-    const string id_;
-    const string description_;
-    string location_;  // Currently used for initial location of the object or is it with player.
-    int durability_;
+    // Member variables to store object attributes
+    const string id_; // Unique identifier for the object
+    const string description_; // Description of the object
+    string location_; // Location of the object
+    int durability_; // Durability of the object
 };
 
 #endif // OBJECT_H

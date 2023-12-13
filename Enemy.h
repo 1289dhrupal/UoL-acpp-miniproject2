@@ -7,42 +7,48 @@ using namespace std;
 #ifndef ENEMY_H
 #define ENEMY_H
 
+// The Enemy class represents an enemy with unique attributes in the game.
 class Enemy {
-    // Represents an enemy with unique attributes in the game.
 public:
+    // Static constants for default enemy attributes
     static const string DEFAULT_DESCRIPTION;
     static const int DEFAULT_AGGRESSIVENESS;
     static const string DEFAULT_KILLED_BY;
 
-    // Constructor to initialize an enemy with ID, description, aggressiveness, and location.
+    // Constructor: Initializes an enemy with specific attributes.
+    // id: Unique identifier for the enemy.
+    // description: Description of the enemy.
+    // canBeKilledBy: Specifies what can be used to kill the enemy.
+    // aggressiveness: Aggressiveness level of the enemy.
     Enemy(const string& id, const string& description, const string& canBeKilledBy, int aggressiveness);
 
-    // Destructor for the Enemy class.
+    // Destructor: Cleans up the Enemy's resources.
     ~Enemy();
 
-    // Returns the unique ID of the enemy.
+    // getId: Returns the unique ID of the enemy.
     string getId() const;
 
-    // Returns the description of the enemy.
+    // getDescription: Returns the description of the enemy.
     string getDescription() const;
 
-    // Returns the object that can kill the enemy.
+    // getCanBeKilledBy: Returns the object that can kill the enemy.
     string getCanBeKilledBy() const;
 
-    // Returns the aggressiveness level of the enemy.
+    // getAggressiveness: Returns the aggressiveness level of the enemy.
     int getAggressiveness() const;
 
-    // Sets the aggressiveness level of the enemy.
+    // setAggressiveness: Sets the aggressiveness level of the enemy.
     void setAggressiveness(int aggressiveness);
 
-    // Provides a detailed description of the enemy.
+    // look: Provides a detailed description of the enemy.
     string look() const;
 
 private:
-    const string id_;
-    const string description_;
-    int aggressiveness_;
-    const string canBeKilledBy_;
+    // Member variables to store enemy attributes
+    const string id_; // Unique identifier for the enemy
+    const string description_; // Description of the enemy
+    int aggressiveness_; // Aggressiveness level of the enemy
+    const string canBeKilledBy_; // Specifies what can kill the enemy
 };
 
 #endif // ENEMY_H

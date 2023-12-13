@@ -29,19 +29,25 @@ Game::~Game() {
 
 	// Delete all dynamically allocated enemies
 	for (auto& enemyPair : enemies_) {
-		delete enemyPair.second;
+		if (enemyPair.second != nullptr) {
+			delete enemyPair.second;
+		}
 	}
 	enemies_.clear();
 
 	// Delete all dynamically allocated rooms
 	for (auto& roomPair : rooms_) {
-		delete roomPair.second;
+		if (roomPair.second != nullptr) {
+			delete roomPair.second;
+		}
 	}
 	rooms_.clear();
 
 	// Delete all dynamically allocated objects
 	for (auto& objectPair : objects_) {
-		delete objectPair.second;
+		if (objectPair.second != nullptr) {
+			delete objectPair.second;
+		}
 	}
 	objects_.clear();
 }
@@ -131,7 +137,7 @@ string Game::actionCommands_() const {
 void Game::initializeObjective_(const json& jsonData) {
 	// Extracting objective details from JSON
 	string objectiveType = jsonData["objective"]["type"].get<string>();
-	string objectiveRoomId = jsonData["objective"]["what"].get<string>();
+	string objectiveRoomId = jsonData["objective"]["what"][0].get<string>();
 
 	// Creating a new Objective instance
 	objective_ = new Objective(objectiveType, objectiveRoomId);
@@ -229,8 +235,8 @@ void Game::initializeEnemies_(const json& jsonData) {
 			}
 
 			string canBeKilledBy = Enemy::DEFAULT_KILLED_BY;
-			if (enemyData.contains("killedby") && enemyData["killedby"].is_string()) {
-				canBeKilledBy = enemyData["killedby"].get<string>();
+			if (enemyData.contains("killedby") && enemyData["killedby"].is_array() && enemyData["killedby"].size() > 0) {
+				canBeKilledBy = enemyData["killedby"][0].get<string>();
 			}
 
 			Enemy* newEnemy = new Enemy(enemyId, enemyDescription, canBeKilledBy, enemyAggressiveness);
@@ -434,14 +440,23 @@ string Game::actionAttack_(const string& enemyId, const string& objectId) {
 	// Perform attack calculations
 	Enemy* currentEnemy = currentEnemies[enemyId];
 	Object* currentPickedObject = currentPickedObjects[objectId];
+
 	int enemyAggressiveness = currentEnemy->getAggressiveness();
 	int objectDurability = currentPickedObject->getDurability();
-	int updatedAggressiveness = std::max(0, enemyAggressiveness - objectDurability);
-	int updatedDurability = std::max(0, objectDurability - enemyAggressiveness);
+
+	// If the enemy can be killed by the current object it only reduces a single durability of the object
+	if (currentPickedObject->getId() != currentEnemy->getCanBeKilledBy()) {
+		enemyAggressiveness = std::max(0, enemyAggressiveness - objectDurability);
+		objectDurability = std::max(0, objectDurability - enemyAggressiveness);
+	}
+	else {
+		enemyAggressiveness = 0;
+		objectDurability -= 1;
+	}
 
 	// Update enemy and object states
-	currentEnemy->setAggressiveness(updatedAggressiveness);
-	currentPickedObject->setDurability(updatedDurability);
+	currentEnemy->setAggressiveness(enemyAggressiveness);
+	currentPickedObject->setDurability(objectDurability);
 
 	stringstream ss;
 	// Handle outcomes of the attack
@@ -451,7 +466,7 @@ string Game::actionAttack_(const string& enemyId, const string& objectId) {
 		ss << "Enemy " << enemyId << " has been defeated!" << endl;
 	}
 	else {
-		ss << "Enemy has been attacked and aggressiveness is reduced to " << updatedAggressiveness << endl;
+		ss << "Enemy has been attacked and aggressiveness is reduced to " << enemyAggressiveness << endl;
 	}
 
 	if (currentPickedObject->getDurability() <= 0) {
@@ -460,7 +475,7 @@ string Game::actionAttack_(const string& enemyId, const string& objectId) {
 		ss << "Object " << objectId << " has been destroyed!" << endl;
 	}
 	else {
-		ss << "Object has been used and durability is reduced to " << updatedDurability << endl;
+		ss << "Object has been used and durability is reduced to " << objectDurability << endl;
 	}
 
 	return ss.str();

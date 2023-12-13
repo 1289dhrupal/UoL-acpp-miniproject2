@@ -28,7 +28,9 @@
       "desc": "The zombie looks like it wants to attack you.",
       "aggressiveness": 50,
       "initialroom": "room2",
-      "killedby": "gun"
+      "killedby": [
+        "gun"
+      ]
     }
   ],
   "player": {
@@ -36,6 +38,8 @@
   },
   "objective": {
     "type": "kill",
-    "what": "zombie"
+    "what": [
+      "zombie"
+    ]
   }
 }

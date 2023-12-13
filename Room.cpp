@@ -10,15 +10,21 @@ Room::Room(const string& id, const string& description)
 
 // Destructor: Cleans up the Room's resources.
 Room::~Room() {
-    for (auto& objectPair : objects_) {
-        delete objectPair.second;
-    }
-    objects_.clear();
+	// Delete all dynamically allocated objects
+	for (auto& objectPair : objects_) {
+		if (objectPair.second != nullptr) {
+			delete objectPair.second;
+		}
+	}
+	objects_.clear();
 
-    for (auto& enemyPair : enemies_) {
-        delete enemyPair.second;
-    }
-    enemies_.clear();
+	// Delete all dynamically allocated enemies
+	for (auto& enemyPair : enemies_) {
+		if (enemyPair.second != nullptr) {
+			delete enemyPair.second;
+		}
+	}
+	enemies_.clear();
 }
 
 // getId: Returns the room ID.

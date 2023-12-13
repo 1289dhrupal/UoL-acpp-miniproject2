@@ -9,9 +9,11 @@ using namespace std;
 
 int main() {
     // Open the file containing the game map
-    ifstream file("map4.json");
+    string filename = "map4.json";
+    
+    ifstream file(filename);
     if (!file.is_open()) {
-        cout << "Failed to open map.json" << endl;
+        cout << "Failed to open " << filename << endl;
         return 1;
     }
 
@@ -31,18 +33,23 @@ int main() {
         cout << result << endl;
 
         // Variable to store user input
-        string input;
         while (!game.isGameOver()) {
-            cout << "Enter command: ";
-            getline(cin, input);
+            string command1;
+            cout << "Enter command 1: ";
+            getline(cin, command1);
+
+            string command2;
+            cout << "Enter command 2: ";
+            getline(cin, command2);
+
+            string command3;
+            cout << "Enter command 3: ";
+            getline(cin, command3);
 
             // Process the input command
-            stringstream ss(input);
-            string action, value1, value2;
-            ss >> action >> value1 >> value2;
 
             // Execute the command in the game and output the result
-            result = game.performCommand(action, value1, value2);
+            result = game.performCommand(command1, command2, command3);
             cout << result << endl;
         }
 

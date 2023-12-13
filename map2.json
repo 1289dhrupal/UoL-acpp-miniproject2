@@ -48,7 +48,7 @@
       "initialroom": "room2"
     },
     {
-      "id": "silver_bullet",
+      "id": "silver bullet",
       "desc": "They are a different kind of bullets. You remember reading somewhere that they can kill special monsters.",
       "initialroom": "room3"
     }
@@ -59,21 +59,27 @@
       "desc": "It's a normal ant. It doesn't look like it can cause harm.",
       "aggressiveness": 0,
       "initialroom": "room2",
-      "killedby": "bullet"
+      "killedby": []
     },
     {
       "id": "zombie",
       "desc": "The zombie can only move very slowly.",
       "aggressiveness": 20,
       "initialroom": "room3",
-      "killedby": "bullet"
+      "killedby": [
+        "gun",
+        "bullet"
+      ]
     },
     {
       "id": "werewolf",
       "desc": "The werewolf looks like it wants to attack you.",
       "aggressiveness": 100,
       "initialroom": "room4",
-      "killedby": "silver bullet"
+      "killedby": [
+        "gun",
+        "silver bullet"
+      ]
     }
   ],
   "player": {
@@ -81,6 +87,9 @@
   },
   "objective": {
     "type": "kill",
-    "what": "werewolf"
+    "what": [
+      "zombie",
+      "werewolf"
+    ]
   }
 }

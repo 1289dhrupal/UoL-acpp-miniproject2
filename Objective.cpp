@@ -3,36 +3,29 @@
 
 using namespace std;
 
-// Constructor: Initializes an Objective with a specific type and target room ID.
-// type: The type of the objective (e.g., "room", "kill", "collect").
-// targetId: The ID of the target associated with the objective.
-Objective::Objective(const string& type, const string& targetId) 
-    : type_(type), targetId_(targetId) {}
+Objective::Objective(const string& type, const vector<string> targetIds)
+    : type_(type), targetIds_(targetIds) {}
 
-// Destructor: Cleans up the Objective's resources (if any).
-Objective::~Objective() {
-    // Cleanup logic here (if needed).
+Objective::~Objective() {}
+
+bool Objective::isTargetId(const string& targetId) {
+    return find(targetIds_.begin(), targetIds_.end(), targetId) != targetIds_.end();
 }
 
-// getTargetId: Retrieves the ID of the target associated with the objective.
-string Objective::getTargetId() {
-    return targetId_;
-}
-
-// check: Provides a status summary or description of the objective.
 string Objective::check() {
     stringstream ss;
     ss << "----------------------------------------------" << endl;
-    
-    // Displaying the objective based on its type
+
     if (type_ == "room") {
-        ss << "Objective :: Reach room \"" << targetId_ << "\"." << endl;
-    } else if (type_ == "kill") {
-        ss << "Objective :: Kill enemy \"" << targetId_ << "\"." << endl;
-    } else if (type_ == "collect") {
-        ss << "Objective :: Collect object \"" << targetId_ << "\"." << endl;
-    } else {
-        // Default case for unspecified objective type
+        ss << "Objective :: Reach rooms :: \"" << endl;
+    }
+    else if (type_ == "kill") {
+        ss << "Objective :: Kill enemies :: \"" << endl;
+    }
+    else if (type_ == "collect") {
+        ss << "Objective :: Collect objects :: \"" << endl;
+    }
+    else {
         ss << "Objective :: Survival." << endl;
     }
 

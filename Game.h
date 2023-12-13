@@ -38,24 +38,21 @@ public:
     bool isGameOver() const;
 
 private:
-    // Pointers to various game elements.
+
     Player* player_ = nullptr;
     Objective* objective_ = nullptr;
     map<string, Enemy*> enemies_;
     map<string, Room*> rooms_;
     map<string, Object*> objects_;
 
-    // Flag to track if the game is over.
     bool isGameOver_ = false;
 
-    // Methods to initialize game components from JSON data.
     void initializePlayer_(const json& jsonData);
     void initializeObjective_(const json& jsonData);
     void initializeRooms_(const json& jsonData);
     void initializeObjects_(const json& jsonData);
     void initializeEnemies_(const json& jsonData);
 
-    // Action methods corresponding to different player commands.
     string actionLook_(const string& value1, const string& value2 = "");
     string actionPick_(const string& objectId);
     string actionDrop_(const string& objectId);

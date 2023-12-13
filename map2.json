@@ -59,27 +59,21 @@
       "desc": "It's a normal ant. It doesn't look like it can cause harm.",
       "aggressiveness": 0,
       "initialroom": "room2",
-      "killedby": []
+      "killedby": "bullet"
     },
     {
       "id": "zombie",
       "desc": "The zombie can only move very slowly.",
       "aggressiveness": 20,
       "initialroom": "room3",
-      "killedby": [
-        "gun",
-        "bullet"
-      ]
+      "killedby": "bullet"
     },
     {
       "id": "werewolf",
       "desc": "The werewolf looks like it wants to attack you.",
       "aggressiveness": 100,
       "initialroom": "room4",
-      "killedby": [
-        "gun",
-        "silver bullet"
-      ]
+      "killedby": "silver bullet"
     }
   ],
   "player": {
@@ -87,9 +81,6 @@
   },
   "objective": {
     "type": "kill",
-    "what": [
-      "zombie",
-      "werewolf"
-    ]
+    "what": "werewolf"
   }
 }

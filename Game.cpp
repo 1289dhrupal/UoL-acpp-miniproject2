@@ -79,7 +79,7 @@ string Game::performCommand(const string& action, const string& value1, const st
 
 void Game::initializeObjective_(const json& jsonData) {
 	string objectiveType = jsonData["objective"]["type"].get<string>();
-	string objectiveRoomId = jsonData["objective"]["what"][0].get<string>(); // Get the first element of the array
+	string objectiveRoomId = jsonData["objective"]["what"].get<string>(); // Get the first element of the array
 	objective_ = new Objective(objectiveType, objectiveRoomId);
 }
 
@@ -96,7 +96,6 @@ void Game::initializeRooms_(const json& jsonData) {
 			Room* room = new Room(roomId, roomDescription);
 			rooms_[roomId] = room;
 		}
-
 
 		for (const auto& roomData : jsonData["rooms"]) {
 			const string currentRoomId = roomData["id"].get<string>();
@@ -166,23 +165,22 @@ void Game::initializeEnemies_(const json& jsonData) {
 				enemyAggressiveness = enemyData["aggressiveness"].get<int>();
 			}
 
-			Enemy* newEnemy = new Enemy(enemyId, enemyDescription, enemyAggressiveness);
+			string canBeKilledBy = Enemy::DEFAULT_KILLED_BY; // Use a default value
+			if (enemyData.contains("killedby") && enemyData["killedby"].is_string()) {
+				canBeKilledBy = enemyData["killedby"].get<string>();
+			}
+
+			Enemy* newEnemy = new Enemy(enemyId, enemyDescription, canBeKilledBy, enemyAggressiveness);
 			enemies_[enemyId] = newEnemy;
 
 			// Add the enemy to its initial room
-			string bossRoomId = objective_->getBossRoomId(); // Use a default value
-
-			string initialRoomId = bossRoomId; // Use a default value
 			if (enemyData.contains("initialroom") && enemyData["initialroom"].is_string()) {
-				initialRoomId = enemyData["initialroom"].get<string>();
+				string initialRoomId = enemyData["initialroom"].get<string>();
+				Room* room = rooms_[initialRoomId];
+				room->addEnemy(newEnemy);
 			}
 
-			Room* room = rooms_[bossRoomId];
-			if (rooms_.find(initialRoomId) != rooms_.end()) {
-				room = rooms_[initialRoomId];
-			}
-
-			room->addEnemy(newEnemy);
+			// Automatically removes the boss from the game if the room is not found.
 		}
 	}
 }
@@ -279,6 +277,12 @@ string Game::actionPick_(const string& objectId)
 	Object* currentObject = currentObjects[objectId];
 	currentRoom->removeObject(currentObject);
 	player_->addObject(currentObject);
+
+	if (objectId == objective_->getTargetId()) {
+		isGameOver_ = true;
+		return "You have found the required object " + objectId + "!!";
+	}
+
 	return "Picked up object.\n";
 }
 
@@ -335,22 +339,25 @@ string Game::actionGoto_(const string& direction)
 		player_->setHealth(currentHealth);
 		ss << "Health reduced as this room had enemies :: current health (" << currentHealth << ")" << endl;
 	}
-	else if (currentRoomId == objective_->getBossRoomId()) {
-		ss << "You have reached the targeted room." << endl;
-		ss << "You have cleared the objective as there are no enemies in the room! " << endl;;
-		isGameOver_ = true;
-		return;
-	}
 
 	Room* gotoRoom = rooms_[roomId];
 	player_->setLocation(roomId);
 	ss << "Moved to Room " + roomId << endl;
 
-	if (roomId == objective_->getBossRoomId()) {
+	if (!gotoRoom->hasExits()) {
+		ss << "You have entered a trap room with no exits." << endl;
+		isGameOver_ = true;
+		return ss.str();
+	}
+	
+	if (roomId == objective_->getTargetId()) {
 		if (!gotoRoom->hasEnemy()) {
+			ss << "You have reached the targeted room." << endl;
+			ss << "You have cleared the objective as there are no enemies in the room! " << endl;;
 			isGameOver_ = true;
-			return;
+			return ss.str();
 		}
+
 		ss << "You have reached the targeted room. Please kill the remaining enemies to win the game." << endl;;
 	}
 
@@ -391,7 +398,7 @@ string Game::actionAttack_(const string& enemyId, const string& objectId)
 		currentRoom->removeEnemy(currentEnemy);
 		delete currentEnemy;  // Assuming dynamic allocation of enemies
 		ss << "Enemy " << enemyId << " has been defeated!" << endl;
-		if (objective_->getBossRoomId() == currentRoomId) {
+		if (objective_->getTargetId() == currentRoomId) {
 			isGameOver_ = true;
 		}
 	}

@@ -28,6 +28,9 @@ Room* Room::getExit(const string& direction) {
 // Sets an exit for the room in a specified direction.
 void Room::setExit(const string& direction, Room* room) { exits_[direction] = room; }
 
+// Checks if the room has any exits.
+bool Room::hasExits() { return !exits_.empty(); }
+
 // Retrieves an object by ID from the room.
 Object* Room::getObject(const string& objectId) {
     auto it = objects_.find(objectId);

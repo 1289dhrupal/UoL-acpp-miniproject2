@@ -79,9 +79,7 @@
       "desc": "The guy is very big. He says in order to get to the next room you have to beat him first.",
       "aggressiveness": 99,
       "initialroom": "room3",
-      "killedby": [
-        "gun"
-      ]
+      "killedby": "gun"
     }
   ],
   "player": {
@@ -89,8 +87,6 @@
   },
   "objective": {
     "type": "room",
-    "what": [
-      "room4"
-    ]
+    "what": "room4"
   }
 }

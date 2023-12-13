@@ -2,6 +2,7 @@
 #include <string>
 #include <map>
 #include "Room.h"
+#include "Enemy.h"
 #include "Object.h"
 
 using namespace std;
@@ -21,15 +22,13 @@ public:
     // Destructor for the Objective class.
     ~Objective();
 
-    string getBossRoomId();
-
-    bool isObjectiveAchived(Room* room);
+    string getTargetId();
 
     string check();
 
 private:
     const string type_;
-    const string roomId_;
+    const string targetId_;
 };
 
 #endif // OBJECTIVE_H

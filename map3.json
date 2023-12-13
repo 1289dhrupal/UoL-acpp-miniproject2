@@ -79,9 +79,7 @@
       "desc": "The guy is very big. He says in order to get the red gem you have to beat him first.",
       "aggressiveness": 99,
       "initialroom": "room1",
-      "killedby": [
-        "gun"
-      ]
+      "killedby": "gun"
     }
   ],
   "player": {
@@ -89,10 +87,6 @@
   },
   "objective": {
     "type": "collect",
-    "what": [
-      "red gem",
-      "green gem",
-      "blue gem"
-    ]
+    "what": "red_gem"
   }
 }

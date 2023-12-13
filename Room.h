@@ -30,6 +30,9 @@ public:
     // Sets an exit for the room in a specified direction.
     void setExit(const string& direction, Room* room);
 
+    // Checks if the room has any exits.
+    bool hasExits();
+
     // Retrieves an object from the room based on its ID.
     Object* getObject(const string& objectId);
     

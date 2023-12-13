@@ -37,11 +37,9 @@ string Object::getLocation() const { return location_; }
 string Object::look() const {
     stringstream ss;
 
-    ss << "----------------------------------------------" << endl;
-    ss << "Object :: " << id_ << " : " << description_ << endl;
-    ss << "    Current status :: Durability(" << durability_ << ")" << endl;
-    ss << "                      Location(" << location_ << endl;
-    ss << "----------------------------------------------" << endl;
+    ss << "        Object :: " << id_ << " : " << description_ << endl;
+    ss << "            Current status :: Durability(" << durability_ << ")" << endl;
+    ss << "                              Location(" << location_ << endl;
 
     return ss.str();
 }

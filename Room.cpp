@@ -94,7 +94,7 @@ string Room::look() {
 
     // Describe objects
     if (!objects_.empty()) {
-        ss << "Objects in the room:\n";
+        ss << "    Objects in the room:\n";
         for (const auto& objectPair : objects_) {
             Object* object = objectPair.second;
             ss << object->look() << endl;
@@ -103,7 +103,7 @@ string Room::look() {
 
     // Describe enemies
     if (!enemies_.empty()) {
-        ss << "Enemies in the room:\n";
+        ss << "    Enemies in the room:\n";
         for (const auto& enemyPair : enemies_) {
             Enemy* enemy = enemyPair.second;
             ss << enemy->look() << endl;
@@ -112,12 +112,10 @@ string Room::look() {
 
     // Describe exits
     if (!exits_.empty()) {
-        ss << "Exits from the room:\n";
+        ss << "    Exits from the room:\n";
         for (const auto& exitPair : exits_) {
-            ss << "----------------------------------------------" << endl;
             Room* exit = exitPair.second;
-            ss << "Exit :: " << exitPair.first << " : " << exitPair.second->getId() << endl;
-            ss << "----------------------------------------------" << endl;
+            ss << "        Exit :: " << exitPair.first << " : " << exitPair.second->getId() << endl;
         }
     }
     ss << "----------------------------------------------" << endl;
@@ -131,12 +129,8 @@ string Room::lookAround() {
     for (const auto& exitPair : exits_) {
         Room* connectedRoom = exitPair.second;
         if (connectedRoom) {
-            ss << "----------------------------------------------" << endl;
-            ss << "----------------------------------------------" << endl;
-            ss << "Looking towards the " << exitPair.first << ", you see: ";
+            ss << "\n\nLooking towards the " << exitPair.first << ", you see: \n";
             ss << connectedRoom->look() << endl << endl;
-            ss << "----------------------------------------------" << endl;
-            ss << "----------------------------------------------" << endl;
         }
     }
     return ss.str();

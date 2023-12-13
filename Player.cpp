@@ -51,12 +51,11 @@ string Player::check() const {
     ss << "Player :: Health (" << health_ << ")" << endl;
     ss << "          Current Location (" << location_ << ")" << endl;
     ss << "          Objects (" << endl;
-    ss << "          )" << endl;
-
     for (const auto& objectPair : objects_) {
         Object* object = objectPair.second;
         ss << "              " << objectPair.first << "(" << object->getDurability() << ")" << endl;
     }
+    ss << "          )" << endl;
 
     ss << "----------------------------------------------" << endl;
 

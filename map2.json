@@ -48,7 +48,7 @@
       "initialroom": "room2"
     },
     {
-      "id": "silver bullet",
+      "id": "silver_bullet",
       "desc": "They are a different kind of bullets. You remember reading somewhere that they can kill special monsters.",
       "initialroom": "room3"
     }

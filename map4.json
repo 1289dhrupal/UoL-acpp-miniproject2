@@ -58,24 +58,24 @@
       "initialroom": "room1"
     },
     {
-      "id": "red gem",
+      "id": "red_gem",
       "desc": "It is a red gem.",
       "initialroom": "room1"
     },
     {
-      "id": "green gem",
+      "id": "green_gem",
       "desc": "It is a green gem.",
       "initialroom": "room2"
     },
     {
-      "id": "blue gem",
+      "id": "blue_gem",
       "desc": "It is a blue gem.",
       "initialroom": "room3"
     }
   ],
   "enemies": [
     {
-      "id": "big guy",
+      "id": "big_guy",
       "desc": "The guy is very big. He says in order to get to the next room you have to beat him first.",
       "aggressiveness": 99,
       "initialroom": "room3",

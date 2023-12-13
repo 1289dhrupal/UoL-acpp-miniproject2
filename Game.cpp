@@ -34,7 +34,7 @@ string Game::displayActions() const {
 	ss << "4. Drop - Drop an object from your inventory.\n";
 	ss << "   Usage: Type 'drop [object ID]' to drop an object.\n";
 	ss << "5. Goto - Move to a different room, if possible.\n";
-	ss << "   Usage: Type 'goto [room ID]' to move to a different room.\n";
+	ss << "   Usage: Type 'goto [direction]' to move to a different room.\n";
 	ss << "6. Attack - Attack an enemy using an object from your inventory.\n";
 	ss << "   Usage: Type 'attack [enemy ID] [object ID]' to attack an enemy.\n";
 	ss << "7. Exit - Exit the game.\n";
@@ -78,8 +78,8 @@ string Game::performCommand(const string& action, const string& value1, const st
 }
 
 void Game::initializeObjective_(const json& jsonData) {
-	string objectiveType = jsonData["objective"]["type"].get<string>();;
-	string objectiveRoomId = jsonData["objective"]["what"]["room"].get<string>();;
+	string objectiveType = jsonData["objective"]["type"].get<string>();
+	string objectiveRoomId = jsonData["objective"]["what"][0].get<string>(); // Get the first element of the array
 	objective_ = new Objective(objectiveType, objectiveRoomId);
 }
 
@@ -91,11 +91,12 @@ void Game::initializePlayer_(const json& jsonData) {
 void Game::initializeRooms_(const json& jsonData) {
 	if (jsonData.contains("rooms") && jsonData["rooms"].is_array()) {
 		for (const auto& roomData : jsonData["rooms"]) {
-			const string roomId = jsonData["rooms"]["id"].get<string>();
-			const string roomDescription = jsonData["rooms"]["desc"].get<string>();
+			const string roomId = roomData["id"].get<string>();
+			const string roomDescription = roomData["desc"].get<string>();
 			Room* room = new Room(roomId, roomDescription);
 			rooms_[roomId] = room;
 		}
+
 
 		for (const auto& roomData : jsonData["rooms"]) {
 			const string currentRoomId = roomData["id"].get<string>();
@@ -297,18 +298,19 @@ string Game::actionDrop_(const string& objectId)
 	return "Dropped object.\n";
 }
 
-string Game::actionGoto_(const string& roomId)
+string Game::actionGoto_(const string& direction)
 {
-	if (rooms_.find(roomId) == rooms_.end()) {
-		return "Invalid roomId\n";
-	}
-
 	string currentRoomId = player_->getLocation();
 	Room* currentRoom = rooms_[currentRoomId];
+	Room* exitRoom = currentRoom->getExit(direction);
 
-	Room* exitRoom = currentRoom->getExit(roomId);
 	if (exitRoom == nullptr) {
-		return "Current room does not have exit to " + roomId + "\n";
+		return "Current room does not have exit to " + direction + "\n";
+	}
+
+	string roomId = exitRoom->getId();
+	if (rooms_.find(roomId) == rooms_.end()) {
+		return "Invalid roomId\n";
 	}
 
 	std::stringstream ss;
@@ -333,12 +335,22 @@ string Game::actionGoto_(const string& roomId)
 		player_->setHealth(currentHealth);
 		ss << "Health reduced as this room had enemies :: current health (" << currentHealth << ")" << endl;
 	}
+	else if (currentRoomId == objective_->getBossRoomId()) {
+		ss << "You have reached the targeted room." << endl;
+		ss << "You have cleared the objective as there are no enemies in the room! " << endl;;
+		isGameOver_ = true;
+		return;
+	}
 
 	Room* gotoRoom = rooms_[roomId];
 	player_->setLocation(roomId);
 	ss << "Moved to Room " + roomId << endl;
 
 	if (roomId == objective_->getBossRoomId()) {
+		if (!gotoRoom->hasEnemy()) {
+			isGameOver_ = true;
+			return;
+		}
 		ss << "You have reached the targeted room. Please kill the remaining enemies to win the game." << endl;;
 	}
 
@@ -393,7 +405,7 @@ string Game::actionAttack_(const string& enemyId, const string& objectId)
 		ss << "Object " << objectId << " has been destroyed!" << endl;
 	}
 	else {
-		ss << "Enemy has been used and durability is reduced to " << updatedDurability << endl;
+		ss << "Object has been used and durability is reduced to " << updatedDurability << endl;
 	}
 
 	return ss.str();

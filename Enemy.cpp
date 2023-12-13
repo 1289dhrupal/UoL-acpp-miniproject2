@@ -30,10 +30,8 @@ void Enemy::setAggressiveness(int aggressiveness) { aggressiveness_ = aggressive
 string Enemy::look() const {
     stringstream ss;
 
-    ss << "----------------------------------------------" << endl;
-    ss << "Enemy :: " << id_ << " : " << description_ << endl;
-    ss << "    Current status :: Aggressiveness_ (" << aggressiveness_ << ")" << endl;
-    ss << "----------------------------------------------" << endl;
+    ss << "        Enemy :: " << id_ << " : " << description_ << endl;
+    ss << "            Current status :: Aggressiveness_ (" << aggressiveness_ << ")" << endl;
 
     return ss.str();
 }

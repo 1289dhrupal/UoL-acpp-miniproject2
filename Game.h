@@ -53,7 +53,7 @@ private:
 
     string actionDrop_(const string& objectId);
 
-    string actionGoto_(const string& roomId);
+    string actionGoto_(const string& direction);
 
     string actionAttack_(const string& enemyId, const string& objectId);
 

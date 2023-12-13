@@ -51,33 +51,6 @@ bool Game::isGameOver() const {
 	return isGameOver_;
 }
 
-// Displays a list of available actions to the player
-string Game::displayActions() const {
-	std::stringstream ss;
-
-	ss << "Available Actions:\n";
-	ss << "1. Status - Check the current status of the game.\n";
-	ss << "   Usage: Type 'status' to get a summary of the current gameplay.\n";
-	ss << "2. Look - Check your surroundings or inspect specific items or enemies.\n";
-	ss << "   Usage: Type 'look room' to look at the current room.\n";
-	ss << "          Type 'look around' to see nearby areas.\n";
-	ss << "          Type 'look player' to check the player's status.\n";
-	ss << "          Type 'look object [object ID]' for details about an object.\n";
-	ss << "          Type 'look enemy [enemy ID]' for details about an enemy.\n";
-	ss << "3. Pick - Pick up an object in the current room.\n";
-	ss << "   Usage: Type 'pick [object ID]' to pick up an object.\n";
-	ss << "4. Drop - Drop an object from your inventory.\n";
-	ss << "   Usage: Type 'drop [object ID]' to drop an object.\n";
-	ss << "5. Goto - Move to a different room, if possible.\n";
-	ss << "   Usage: Type 'goto [direction]' to move to a different room.\n";
-	ss << "6. Attack - Attack an enemy using an object from your inventory.\n";
-	ss << "   Usage: Type 'attack [enemy ID] [object ID]' to attack an enemy.\n";
-	ss << "7. Exit - Exit the game.\n";
-	ss << "   Usage: Type 'exit' to leave the game.\n";
-	ss << "Note: All the commands are case sensitive.\n";
-	return ss.str();
-}
-
 // Executes a command based on player input
 string Game::performCommand(const string& action, const string& value1, const string& value2) {
 	// Handle 'exit' command
@@ -89,6 +62,11 @@ string Game::performCommand(const string& action, const string& value1, const st
 	// Handle 'status' command
 	if (action == "status") {
 		return actionStatus_();
+	}
+
+	// Handle 'commands' command
+	if (action == "commands") {
+		return actionCommands_();
 	}
 
 	// Handle 'look' command
@@ -118,6 +96,35 @@ string Game::performCommand(const string& action, const string& value1, const st
 
 	// Default case for invalid commands
 	return "Invalid Command for " + action + "\n";
+}
+
+// Displays a list of available actions to the player
+string Game::actionCommands_() const {
+	std::stringstream ss;
+
+	ss << "Available Commands:\n";
+	ss << "1. Commands - Shows the Action menu.\n";
+	ss << "   Usage: Type 'commands' to get this list of commands.\n";
+	ss << "1. Status - Check the current status of the game.\n";
+	ss << "   Usage: Type 'status' to get a summary of the current gameplay.\n";
+	ss << "2. Look - Check your surroundings or inspect specific items or enemies.\n";
+	ss << "   Usage: Type 'look room' to look at the current room.\n";
+	ss << "          Type 'look around' to see nearby areas.\n";
+	ss << "          Type 'look player' to check the player's status.\n";
+	ss << "          Type 'look object [object ID]' for details about an object.\n";
+	ss << "          Type 'look enemy [enemy ID]' for details about an enemy.\n";
+	ss << "3. Pick - Pick up an object in the current room.\n";
+	ss << "   Usage: Type 'pick [object ID]' to pick up an object.\n";
+	ss << "4. Drop - Drop an object from your inventory.\n";
+	ss << "   Usage: Type 'drop [object ID]' to drop an object.\n";
+	ss << "5. Goto - Move to a different room, if possible.\n";
+	ss << "   Usage: Type 'goto [direction]' to move to a different room.\n";
+	ss << "6. Attack - Attack an enemy using an object from your inventory.\n";
+	ss << "   Usage: Type 'attack [enemy ID] [object ID]' to attack an enemy.\n";
+	ss << "7. Exit - Exit the game.\n";
+	ss << "   Usage: Type 'exit' to leave the game.\n";
+	ss << "Note: All the commands are case sensitive.\n";
+	return ss.str();
 }
 
 // Initializes the game objective from JSON data

@@ -28,9 +28,6 @@ public:
     // Destructor: Cleans up the game's allocated resources.
     ~Game();
 
-    // displayActions: Displays available actions to the player.
-    string displayActions() const;
-
     // performCommand: Performs a command given by the player.
     // action: The command to perform.
     // value1: The first optional argument for the command.
@@ -65,6 +62,7 @@ private:
     string actionGoto_(const string& direction);
     string actionAttack_(const string& enemyId, const string& objectId);
     string actionStatus_();
+    string actionCommands_() const;
 };
 
 #endif // GAME_H

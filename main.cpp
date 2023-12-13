@@ -27,7 +27,8 @@ int main() {
         // Initialize the game with the JSON data
         Game game(jsonData);
 
-        game.displayActions();
+        string result = game.performCommand("commands");
+        cout << result << endl;
 
         // Variable to store user input
         string input;
@@ -41,7 +42,7 @@ int main() {
             ss >> action >> value1 >> value2;
 
             // Execute the command in the game and output the result
-            string result = game.performCommand(action, value1, value2);
+            result = game.performCommand(action, value1, value2);
             cout << result << endl;
         }
 
@@ -52,9 +53,6 @@ int main() {
         // Catch and display runtime errors
         cout << "Caught a runtime error: " << e.what() << endl;
     }
-
-    // Display any leftover content from the file
-    cout << file_content << endl;
 
     return 0;
 }
